@@ -1,51 +1,33 @@
 package org.example.service;
 
-import lombok.AllArgsConstructor;
 import org.example.model.Student;
-import org.example.repository.StudentRepository;
+import org.example.repository.StudentMapper;
+import org.example.util.BooleanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class StudentService {
     @Autowired
-    @Qualifier("studentNamedParameterJdbcRepository")
-    private StudentRepository studentRepository;
-    //private final StudentRepository studentJdbcRepository;
-
-    public Integer countOfStudent() {
-        return studentRepository.countOfStudents();
-    }
-    public List<String> getListOfStudentName() {
-        return studentRepository.selectListOfStudentName();
+    private StudentMapper studentMapper;
+    public List<Student> getStudentByParam(Student student) {
+        return studentMapper.selectStudentByParam(student);
     }
 
-    public void registStudent(Map<String, Object> params) {
-        studentRepository.insertStudent(params);
+    public String patchStudent(Student student) {
+        Integer apiResult = studentMapper.patchStudent(student);
+
+        if(BooleanUtil.isFalse(apiResult)) return "바꾸려는 학생의 ID와 일치하는 정보가 없습니다.";
+        else return "성공적으로 업데이트되었습니다.";
     }
 
-    public Map<String, Object> getStudent(int id) {
-        return studentRepository.getStudent(id);
-    }
 
-    public void registStudent(Student student) {
-        studentRepository.insertStudent(student);
-    }
+    public String insertStudent(Student student) {
+        Integer apiResult = studentMapper.insertStudent(student);
 
-    public List<Student> getListOfStudent() {
-        return studentRepository.selectListOfStudent();
-    }
-
-    public List<Student> findStudents(String name) {
-        return studentRepository.findStudents(name);
-    }
-
-    public Optional<Student> findStudent(Integer studentId) {
-        return studentRepository.selectStudentById(studentId);
+        if(BooleanUtil.isFalse(apiResult)) return "학생정보 등록에 실패했습니다.";
+        else return "성공적으로 학생정보를 등록했습니다.";
     }
 }

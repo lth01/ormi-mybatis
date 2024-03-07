@@ -56,7 +56,7 @@ dependencies {
 }
 
 flyway {
-    url = 'jdbc:mysql://127.0.0.1:11802/test?useSSL=false'
+    url = 'jdbc:mysql://127.0.0.1:11802/test?useSSL=false&allowPublicKeyRetrieval=true'
     user = 'root'
     password = 'root'
 }

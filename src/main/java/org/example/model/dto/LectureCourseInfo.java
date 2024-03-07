@@ -14,4 +14,13 @@ public class LectureCourseInfo {
     private LocalDate to;
     private Integer capacity;
     private Integer registeredStudentCount;
+
+    public LectureCourseInfo(String title, Long lectureCourseId, LocalDate from, LocalDate to, Integer capacity, Integer registeredStudentCount) {
+        this.title = title;
+        this.lectureCourseId = lectureCourseId;
+        this.from = from;
+        this.to = to;
+        this.capacity = capacity;
+        this.registeredStudentCount = registeredStudentCount;
+    }
 }

@@ -32,4 +32,63 @@
         </if>
 
     </select>
+
+    <select id="selectApplicantCount" parameterType="org.example.model.dto.LectureApplicant" resultType="long">
+        SELECT COUNT(t2.id) AS registeredStudentCount
+        FROM lecture_course t1
+                 LEFT OUTER JOIN lecture_applicants t2 ON t1.id = t2.lecture_course_id
+        WHERE t2.lecture_course_id 	 = #{courseId};
+    </select>
+
+    <select id="chkAlreadyApplicant" parameterType="org.example.model.dto.LectureApplicant" resultType="boolean">
+        SELECT IF(COUNT(*) > 0, TRUE, FALSE)
+        FROM lecture_applicants
+        WHERE lecture_course_id = #{courseId}
+        AND student_id = #{id}
+    </select>
+
+    <select id="chkExistCourse" parameterType="long" resultType="boolean">
+        SELECT IF(COUNT(*) > 0, TRUE, FALSE)
+        FROM lecture_course
+        WHERE `id` = #{lectureCourseId}
+    </select>
+
+    <select id="selectRepresentLectureCount" parameterType="long" resultType="long">
+        SELECT COUNT(*) AS representCourseCount FROM lecture_course
+        WHERE `instructor_id` = #{instructorId};
+    </select>
+
+    <insert id="insertLectureCourse" parameterType="org.example.model.dto.LectureCourseDetail">
+        INSERT INTO lecture_course(`title`, `instructor_id`)
+        VALUES (#{title}, #{instructorId})
+    </insert>
+
+    <update id="updateCourseInstructor" parameterType="org.example.model.dto.LectureInstructor">
+        UPDATE lecture_course SET `instructor_id` = #{afterInstructorId}
+        WHERE `instructor_id` = #{instructorId};
+    </update>
+
+    <select id="getMaximumApplicantCount" parameterType="org.example.model.dto.LectureApplicant" resultType="long">
+        SELECT capacity FROM lecture_course
+        WHERE `id` = #{courseId}
+    </select>
+
+    <insert id="applicantCourse" parameterType="org.example.model.dto.LectureApplicant">
+        INSERT INTO lecture_applicants(`lecture_course_id`, `student_id`)
+            VALUES (#{courseId}, #{id})
+    </insert>
+
+    <select id="chkAlreadyAttendance" parameterType="org.example.model.dto.AttendanceInfo" resultType="boolean">
+        SELECT IF(COUNT(*) > 0, TRUE, FALSE) FROM attendance
+        WHERE DATE(now()) = DATE(
+            (SELECT created_at FROM attendance
+            WHERE `lecture_course_id` = #{courseId}
+            AND `student_id` = #{id})
+        )
+    </select>
+
+    <insert id="attendanceCourse" parameterType="org.example.model.dto.AttendanceInfo">
+        INSERT INTO attendance(`lecture_course_id`, `student_id`)
+        VALUES (#{courseId}, #{id})
+    </insert>
 </mapper>

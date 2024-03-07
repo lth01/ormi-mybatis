@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.repository.StudentMapper">
+   <select id="selectStudentByParam" parameterType="org.example.model.Student" resultType="org.example.model.Student">
+       SELECT * FROM student
+       <if test="id != null || name != null || age != null">
+           WHERE TRUE
+       </if>
+       <if test="id != null" >
+           AND id = #{id}
+       </if>
+       <if test="name != null">
+           AND name = #{name}
+       </if>
+       <if test="age != null">
+           AND age = #{age}
+       </if>
+   </select>
+
+    <select id="selectStudentById" parameterType="org.example.model.Student"  resultType="org.example.model.Student">
+        SELECT * FROM student WHERE id = #{id}
+    </select>
+
+    <select id="chkExistStudent" parameterType="long" resultType="boolean">
+        SELECT IF(COUNT(*) > 0, TRUE, FALSE)
+        FROM student
+        WHERE `id` = #{studentId}
+    </select>
+
+    <update id="patchStudent" parameterType="org.example.model.Student">
+        UPDATE student SET
+           `id` = #{id},
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="age != null">
+                `age` = #{age},
+            </if>
+            <if test="desc != null">
+                `desc` = #{desc}
+            </if>
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insertStudent" parameterType="org.example.model.Student">
+        INSERT INTO student(
+            `name`, `age`, `desc`
+        ) VALUES (#{name}, #{age}, #{desc})
+    </insert>
+</mapper>

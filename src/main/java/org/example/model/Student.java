@@ -22,4 +22,11 @@ public class Student {
         this.age = age;
         this.createdAt = createdAt.toLocalDate();
     }
+
+    public Student(Long id, String name, Integer age, String desc) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.desc = desc;
+    }
 }
